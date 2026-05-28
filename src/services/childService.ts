@@ -2,7 +2,7 @@ import {
   collection, doc, addDoc, updateDoc, deleteDoc,
   getDocs, getDoc, query, where,
 } from "firebase/firestore";
-import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 import { db, storage } from "@/lib/firebase";
 import { Child } from "@/types";
 
@@ -34,7 +34,22 @@ export async function deleteChild(childId: string): Promise<void> {
 }
 
 export async function uploadChildPhoto(childId: string, file: File): Promise<string> {
-  const storageRef = ref(storage, `children/${childId}/photo`);
-  await uploadBytes(storageRef, file);
-  return getDownloadURL(storageRef);
+  const ext = file.name.split(".").pop() || "jpg";
+  const storageRef = ref(storage, `children/${childId}/photo_${Date.now()}.${ext}`);
+  
+  return new Promise((resolve, reject) => {
+    const uploadTask = uploadBytesResumable(storageRef, file, {
+      contentType: file.type,
+    });
+    
+    uploadTask.on(
+      "state_changed",
+      null,
+      (error) => reject(error),
+      async () => {
+        const url = await getDownloadURL(uploadTask.snapshot.ref);
+        resolve(url);
+      }
+    );
+  });
 }
