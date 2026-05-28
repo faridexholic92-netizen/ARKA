@@ -1,5 +1,5 @@
 import {
-  collection, addDoc, getDocs, query, where, orderBy, deleteDoc, doc,
+  collection, addDoc, getDocs, query, where, deleteDoc, doc,
 } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 import { GrowthRecord } from "@/types";
@@ -16,13 +16,10 @@ export async function addGrowthRecord(
 }
 
 export async function getGrowthRecords(childId: string): Promise<GrowthRecord[]> {
-  const q = query(
-    collection(db, "growthRecords"),
-    where("childId", "==", childId),
-    orderBy("recordDate", "asc")
-  );
+  const q = query(collection(db, "growthRecords"), where("childId", "==", childId));
   const snap = await getDocs(q);
-  return snap.docs.map((d) => ({ id: d.id, ...d.data() } as GrowthRecord));
+  const records = snap.docs.map((d) => ({ id: d.id, ...d.data() } as GrowthRecord));
+  return records.sort((a, b) => a.recordDate.localeCompare(b.recordDate));
 }
 
 export async function deleteGrowthRecord(recordId: string): Promise<void> {

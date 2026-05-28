@@ -1,5 +1,5 @@
 import {
-  collection, addDoc, getDocs, query, where, orderBy, deleteDoc, doc,
+  collection, addDoc, getDocs, query, where, deleteDoc, doc,
 } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 import { Achievement } from "@/types";
@@ -14,13 +14,10 @@ export async function addAchievement(
 }
 
 export async function getAchievements(childId: string): Promise<Achievement[]> {
-  const q = query(
-    collection(db, "achievements"),
-    where("childId", "==", childId),
-    orderBy("recordDate", "desc")
-  );
+  const q = query(collection(db, "achievements"), where("childId", "==", childId));
   const snap = await getDocs(q);
-  return snap.docs.map((d) => ({ id: d.id, ...d.data() } as Achievement));
+  const records = snap.docs.map((d) => ({ id: d.id, ...d.data() } as Achievement));
+  return records.sort((a, b) => b.recordDate.localeCompare(a.recordDate));
 }
 
 export async function deleteAchievement(recordId: string): Promise<void> {

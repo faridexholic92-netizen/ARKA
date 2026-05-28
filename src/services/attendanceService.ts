@@ -1,5 +1,5 @@
 import {
-  collection, addDoc, getDocs, query, where, orderBy, deleteDoc, doc,
+  collection, addDoc, getDocs, query, where, deleteDoc, doc,
 } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 import { AttendanceRecord } from "@/types";
@@ -14,13 +14,10 @@ export async function addAttendance(
 }
 
 export async function getAttendance(childId: string): Promise<AttendanceRecord[]> {
-  const q = query(
-    collection(db, "attendance"),
-    where("childId", "==", childId),
-    orderBy("attendanceDate", "desc")
-  );
+  const q = query(collection(db, "attendance"), where("childId", "==", childId));
   const snap = await getDocs(q);
-  return snap.docs.map((d) => ({ id: d.id, ...d.data() } as AttendanceRecord));
+  const records = snap.docs.map((d) => ({ id: d.id, ...d.data() } as AttendanceRecord));
+  return records.sort((a, b) => b.attendanceDate.localeCompare(a.attendanceDate));
 }
 
 export async function deleteAttendance(recordId: string): Promise<void> {

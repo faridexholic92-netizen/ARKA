@@ -1,6 +1,6 @@
 import {
   collection, doc, addDoc, updateDoc, deleteDoc,
-  getDocs, getDoc, query, where, orderBy, Timestamp,
+  getDocs, getDoc, query, where,
 } from "firebase/firestore";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { db, storage } from "@/lib/firebase";
@@ -13,9 +13,10 @@ export async function addChild(parentId: string, data: Omit<Child, "id" | "paren
 }
 
 export async function getChildren(parentId: string): Promise<Child[]> {
-  const q = query(collection(db, "children"), where("parentId", "==", parentId), orderBy("createdAt", "desc"));
+  const q = query(collection(db, "children"), where("parentId", "==", parentId));
   const snap = await getDocs(q);
-  return snap.docs.map((d) => ({ id: d.id, ...d.data() } as Child));
+  const children = snap.docs.map((d) => ({ id: d.id, ...d.data() } as Child));
+  return children.sort((a, b) => b.createdAt.localeCompare(a.createdAt));
 }
 
 export async function getChild(childId: string): Promise<Child | null> {
