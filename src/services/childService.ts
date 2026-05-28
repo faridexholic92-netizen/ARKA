@@ -2,8 +2,7 @@ import {
   collection, doc, addDoc, updateDoc, deleteDoc,
   getDocs, getDoc, query, where,
 } from "firebase/firestore";
-import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
-import { db, storage } from "@/lib/firebase";
+import { db } from "@/lib/firebase";
 import { Child } from "@/types";
 
 export async function addChild(parentId: string, data: Omit<Child, "id" | "parentId" | "createdAt">): Promise<Child> {
@@ -33,11 +32,38 @@ export async function deleteChild(childId: string): Promise<void> {
   await deleteDoc(doc(db, "children", childId));
 }
 
-// FIX: guna uploadBytes — mudah dan tak stuck
-export async function uploadChildPhoto(childId: string, file: File): Promise<string> {
-  const ext = file.name.split(".").pop() || "jpg";
-  const storageRef = ref(storage, `children/${childId}/photo_${Date.now()}.${ext}`);
-  const snapshot = await uploadBytes(storageRef, file, { contentType: file.type });
-  const url = await getDownloadURL(snapshot.ref);
-  return url;
+// Compress + convert image to base64, store directly in Firestore (no Storage needed)
+export async function uploadChildPhoto(_childId: string, file: File): Promise<string> {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const img = new window.Image();
+      img.onload = () => {
+        // Resize to max 400x400
+        const MAX = 400;
+        let { width, height } = img;
+        if (width > MAX || height > MAX) {
+          if (width > height) {
+            height = Math.round((height * MAX) / width);
+            width = MAX;
+          } else {
+            width = Math.round((width * MAX) / height);
+            height = MAX;
+          }
+        }
+        const canvas = document.createElement("canvas");
+        canvas.width = width;
+        canvas.height = height;
+        const ctx = canvas.getContext("2d")!;
+        ctx.drawImage(img, 0, 0, width, height);
+        // JPEG quality 0.75 — biasanya <100KB
+        const base64 = canvas.toDataURL("image/jpeg", 0.75);
+        resolve(base64);
+      };
+      img.onerror = reject;
+      img.src = e.target?.result as string;
+    };
+    reader.onerror = reject;
+    reader.readAsDataURL(file);
+  });
 }

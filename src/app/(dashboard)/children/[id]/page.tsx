@@ -10,7 +10,7 @@ import { Child, GrowthRecord, AttendanceRecord, Achievement, HealthRecord } from
 import { calculateAge, formatDate } from "@/lib/utils";
 import Link from "next/link";
 import { ArrowLeft, Edit2, TrendingUp, CalendarCheck, Trophy, Heart, User } from "lucide-react";
-import Image from "next/image";
+
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
 
 type Tab = "info" | "growth" | "health" | "attendance" | "achievements";
@@ -95,7 +95,7 @@ export default function ChildDetailPage() {
           <div className="-mt-10 mb-4 flex items-end gap-4">
             <div className="w-20 h-20 rounded-2xl border-4 border-white bg-blue-100 overflow-hidden flex items-center justify-center shadow-md flex-shrink-0">
               {child.photo ? (
-                <Image src={child.photo} alt={child.fullName} width={80} height={80} className="object-cover w-full h-full" />
+                <img src={child.photo} alt={child.fullName} className="object-cover w-full h-full" />
               ) : (
                 <span className="text-3xl">{child.gender === "male" ? "👦" : "👧"}</span>
               )}

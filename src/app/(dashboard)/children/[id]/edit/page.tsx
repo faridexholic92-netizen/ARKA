@@ -7,7 +7,7 @@ import { z } from "zod";
 import { getChild, updateChild, uploadChildPhoto } from "@/services/childService";
 import { ArrowLeft, Upload } from "lucide-react";
 import Link from "next/link";
-import Image from "next/image";
+
 
 const schema = z.object({
   fullName: z.string().min(2, "Nama minimum 2 aksara"),

@@ -6,7 +6,7 @@ import { Child } from "@/types";
 import Link from "next/link";
 import { Plus, Trash2, Eye, Search } from "lucide-react";
 import { calculateAge } from "@/lib/utils";
-import Image from "next/image";
+
 
 export default function ChildrenPage() {
   const { user } = useAuthStore();
@@ -69,7 +69,7 @@ export default function ChildrenPage() {
               <div className="h-24 gradient-primary flex items-center justify-center">
                 <div className="w-16 h-16 rounded-2xl bg-white bg-opacity-20 border-2 border-white overflow-hidden flex items-center justify-center">
                   {child.photo ? (
-                    <Image src={child.photo} alt={child.fullName} width={64} height={64} className="object-cover w-full h-full" />
+                    <img src={child.photo} alt={child.fullName} className="object-cover w-full h-full" />
                   ) : (
                     <span className="text-3xl">{child.gender === "male" ? "👦" : "👧"}</span>
                   )}

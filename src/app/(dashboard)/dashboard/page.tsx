@@ -10,7 +10,7 @@ import { Child } from "@/types";
 import Link from "next/link";
 import { Users, TrendingUp, CalendarCheck, Trophy, Plus, ArrowRight, Heart } from "lucide-react";
 import { calculateAge, formatDate } from "@/lib/utils";
-import Image from "next/image";
+
 
 export default function DashboardPage() {
   const { user } = useAuthStore();
@@ -127,7 +127,7 @@ export default function DashboardPage() {
                   <div className="flex items-center gap-4">
                     <div className="w-14 h-14 rounded-2xl bg-blue-100 flex items-center justify-center overflow-hidden">
                       {child.photo ? (
-                        <Image src={child.photo} alt={child.fullName} width={56} height={56} className="object-cover w-full h-full" />
+                        <img src={child.photo} alt={child.fullName} className="object-cover w-full h-full" />
                       ) : (
                         <span className="text-2xl">{child.gender === "male" ? "👦" : "👧"}</span>
                       )}
