@@ -1,5 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
+import { toast } from "@/components/Toast";
 import { useAuthStore } from "@/store/authStore";
 import { getChildren } from "@/services/childService";
 import { getAttendance, addAttendance, deleteAttendance, getAttendanceStats } from "@/services/attendanceService";
@@ -54,12 +55,14 @@ export default function AttendancePage() {
     setRecords((prev) => [rec, ...prev]);
     reset({ status: "present", attendanceDate: new Date().toISOString().split("T")[0] });
     setShowForm(false);
+    toast.success("Rekod kehadiran disimpan! ✅");
   };
 
   const handleDelete = async (id: string) => {
     if (!confirm("Padam rekod ini?")) return;
     await deleteAttendance(id);
     setRecords((prev) => prev.filter((r) => r.id !== id));
+    toast.info("Rekod dipadam.");
   };
 
   const stats = getAttendanceStats(records);

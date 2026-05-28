@@ -6,6 +6,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { useAuthStore } from "@/store/authStore";
 import { addChild, uploadChildPhoto, updateChild } from "@/services/childService";
+import { toast } from "@/components/Toast";
 import { ArrowLeft, Upload } from "lucide-react";
 import Link from "next/link";
 
@@ -53,6 +54,7 @@ export default function AddChildPage() {
         const url = await uploadChildPhoto(child.id, photoFile);
         await updateChild(child.id, { photo: url });
       }
+      toast.success("Profil anak berjaya ditambah! 🎉");
       router.push("/children");
     } catch (e: any) {
       console.error("Upload error:", e);

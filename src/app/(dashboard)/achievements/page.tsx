@@ -1,5 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
+import { toast } from "@/components/Toast";
 import { useAuthStore } from "@/store/authStore";
 import { getChildren } from "@/services/childService";
 import { getAchievements, addAchievement, deleteAchievement, categoryLabels, categoryColors } from "@/services/achievementService";
@@ -52,12 +53,14 @@ export default function AchievementsPage() {
     setRecords((prev) => [rec, ...prev]);
     reset({ category: "academic", recordDate: new Date().toISOString().split("T")[0] });
     setShowForm(false);
+    toast.success("Pencapaian berjaya direkodkan! 🏆");
   };
 
   const handleDelete = async (id: string) => {
     if (!confirm("Padam pencapaian ini?")) return;
     await deleteAchievement(id);
     setRecords((prev) => prev.filter((r) => r.id !== id));
+    toast.info("Pencapaian dipadam.");
   };
 
   return (

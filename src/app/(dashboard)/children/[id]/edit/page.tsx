@@ -5,6 +5,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { getChild, updateChild, uploadChildPhoto } from "@/services/childService";
+import { toast } from "@/components/Toast";
 import { ArrowLeft, Upload } from "lucide-react";
 import Link from "next/link";
 
@@ -73,8 +74,8 @@ export default function EditChildPage() {
         const url = await uploadChildPhoto(id, photoFile);
         await updateChild(id, { photo: url });
       }
-      setSuccess("Profil berjaya dikemaskini!");
-      setTimeout(() => router.push(`/children/${id}`), 1500);
+      toast.success("Profil berjaya dikemaskini! ✅");
+      setTimeout(() => router.push(`/children/${id}`), 1000);
     } catch {
       setError("Gagal kemaskini. Cuba lagi.");
     } finally {

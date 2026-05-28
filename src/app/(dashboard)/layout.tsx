@@ -3,6 +3,8 @@ import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useAuthStore } from "@/store/authStore";
 import { Sidebar } from "@/components/Sidebar";
+import { BottomNav } from "@/components/BottomNav";
+import { ToastContainer } from "@/components/Toast";
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
   const { user, loading } = useAuthStore();
@@ -29,8 +31,10 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
     <div className="min-h-screen bg-gray-50">
       <Sidebar />
       <main className="lg:ml-64 min-h-screen">
-        <div className="pt-16 px-4 pb-6 lg:pt-8 lg:px-8">{children}</div>
+        <div className="pt-16 px-4 pb-24 lg:pt-8 lg:px-8 lg:pb-8">{children}</div>
       </main>
+      <BottomNav />
+      <ToastContainer />
     </div>
   );
 }

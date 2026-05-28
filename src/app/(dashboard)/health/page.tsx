@@ -1,5 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
+import { toast } from "@/components/Toast";
 import { useAuthStore } from "@/store/authStore";
 import { getChildren } from "@/services/childService";
 import { getHealthRecords, addHealthRecord, deleteHealthRecord, categoryConfig } from "@/services/healthService";
@@ -54,12 +55,14 @@ export default function HealthPage() {
     setRecords((prev) => [rec, ...prev]);
     reset({ category: "clinic", recordDate: new Date().toISOString().split("T")[0] });
     setShowForm(false);
+    toast.success("Rekod kesihatan disimpan! ❤️");
   };
 
   const handleDelete = async (id: string) => {
     if (!confirm("Padam rekod ini?")) return;
     await deleteHealthRecord(id);
     setRecords((prev) => prev.filter((r) => r.id !== id));
+    toast.info("Rekod dipadam.");
   };
 
   const filtered = filterCat === "all" ? records : records.filter((r) => r.category === filterCat);

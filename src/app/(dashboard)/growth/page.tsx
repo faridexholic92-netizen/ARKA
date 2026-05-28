@@ -1,5 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
+import { toast } from "@/components/Toast";
 import { useAuthStore } from "@/store/authStore";
 import { getChildren } from "@/services/childService";
 import { getGrowthRecords, addGrowthRecord, deleteGrowthRecord, getBMICategory } from "@/services/growthService";
@@ -49,12 +50,14 @@ export default function GrowthPage() {
     setRecords((prev) => [...prev, rec].sort((a, b) => a.recordDate.localeCompare(b.recordDate)));
     reset({ recordDate: new Date().toISOString().split("T")[0] });
     setShowForm(false);
+    toast.success("Rekod perkembangan disimpan! 📏");
   };
 
   const handleDelete = async (id: string) => {
     if (!confirm("Padam rekod ini?")) return;
     await deleteGrowthRecord(id);
     setRecords((prev) => prev.filter((r) => r.id !== id));
+    toast.info("Rekod dipadam.");
   };
 
   const latest = records[records.length - 1];
