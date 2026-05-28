@@ -5,7 +5,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { useAuthStore } from "@/store/authStore";
-import { addChild, uploadChildPhoto } from "@/services/childService";
+import { addChild, uploadChildPhoto, updateChild } from "@/services/childService";
 import { ArrowLeft, Upload } from "lucide-react";
 import Link from "next/link";
 
@@ -51,11 +51,12 @@ export default function AddChildPage() {
       const child = await addChild(user.id, data);
       if (photoFile) {
         const url = await uploadChildPhoto(child.id, photoFile);
-        await import("@/services/childService").then((m) => m.updateChild(child.id, { photo: url }));
+        await updateChild(child.id, { photo: url });
       }
       router.push("/children");
-    } catch {
-      setError("Gagal menambah profil anak. Cuba lagi.");
+    } catch (e: any) {
+      console.error("Upload error:", e);
+      setError(`Gagal menyimpan: ${e?.message || "Cuba lagi."}`);
     } finally {
       setLoading(false);
     }
