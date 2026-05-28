@@ -8,6 +8,7 @@ import {
   LayoutDashboard, Users, TrendingUp, CalendarCheck,
   Trophy, LogOut, Menu, X, Star, Heart,
 } from "lucide-react";
+import { ThemeSwitcher } from "@/components/ThemeSwitcher";
 import { useState } from "react";
 
 const navItems = [
@@ -80,6 +81,7 @@ export function Sidebar() {
             <p className="text-blue-300 text-xs capitalize">{user?.role}</p>
           </div>
         </div>
+        <ThemeSwitcher />
         <button
           onClick={handleLogout}
           className="flex items-center gap-2 text-blue-200 hover:text-white text-sm px-2 py-2 rounded-lg hover:bg-blue-700 transition w-full"

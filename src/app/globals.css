@@ -6,30 +6,74 @@
   :root {
     --background: 0 0% 100%;
     --foreground: 222.2 84% 4.9%;
-    --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
-    --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
     --primary: 221.2 83.2% 53.3%;
     --primary-foreground: 210 40% 98%;
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
-    --accent: 210 40% 96.1%;
-    --accent-foreground: 222.2 47.4% 11.2%;
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
     --border: 214.3 31.8% 91.4%;
     --input: 214.3 31.8% 91.4%;
     --ring: 221.2 83.2% 53.3%;
     --radius: 0.75rem;
+
+    /* Theme: Ocean Blue (default) */
+    --theme-from: #1d4ed8;
+    --theme-to: #1e40af;
+    --theme-accent: #3b82f6;
+    --theme-light: #eff6ff;
+    --theme-text: #1e40af;
+  }
+
+  /* Theme: Emerald Green */
+  [data-theme="emerald"] {
+    --theme-from: #059669;
+    --theme-to: #047857;
+    --theme-accent: #10b981;
+    --theme-light: #ecfdf5;
+    --theme-text: #047857;
+  }
+
+  /* Theme: Purple */
+  [data-theme="purple"] {
+    --theme-from: #7c3aed;
+    --theme-to: #6d28d9;
+    --theme-accent: #8b5cf6;
+    --theme-light: #f5f3ff;
+    --theme-text: #6d28d9;
+  }
+
+  /* Theme: Rose */
+  [data-theme="rose"] {
+    --theme-from: #e11d48;
+    --theme-to: #be123c;
+    --theme-accent: #f43f5e;
+    --theme-light: #fff1f2;
+    --theme-text: #be123c;
+  }
+
+  /* Theme: Sunset Orange */
+  [data-theme="orange"] {
+    --theme-from: #ea580c;
+    --theme-to: #c2410c;
+    --theme-accent: #f97316;
+    --theme-light: #fff7ed;
+    --theme-text: #c2410c;
+  }
+
+  /* Theme: Dark */
+  [data-theme="dark"] {
+    --background: 222 47% 8%;
+    --foreground: 210 40% 98%;
+    --border: 217 32% 17%;
+    --theme-from: #1e293b;
+    --theme-to: #0f172a;
+    --theme-accent: #38bdf8;
+    --theme-light: #1e293b;
+    --theme-text: #38bdf8;
   }
 }
 
 @layer base {
   * { @apply border-border; }
   body { @apply bg-gray-50 text-foreground; }
+  [data-theme="dark"] body { background: #0f172a; color: #f1f5f9; }
 }
 
 @layer components {
@@ -37,9 +81,12 @@
     @apply transition-all duration-200 hover:shadow-lg hover:-translate-y-0.5;
   }
   .gradient-primary {
-    @apply bg-gradient-to-br from-blue-600 to-blue-800;
+    background: linear-gradient(135deg, var(--theme-from), var(--theme-to));
   }
   .gradient-emerald {
     @apply bg-gradient-to-br from-emerald-500 to-emerald-700;
   }
+  .theme-accent { color: var(--theme-accent); }
+  .theme-light { background: var(--theme-light); }
+  .theme-text { color: var(--theme-text); }
 }

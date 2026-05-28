@@ -90,20 +90,20 @@ export default function ChildDetailPage() {
 
       {/* Profile Hero */}
       <div className="bg-white rounded-2xl border overflow-hidden mb-4">
-        <div className="h-28 gradient-primary" />
-        <div className="px-6 pb-6">
-          <div className="-mt-10 mb-4 flex items-end gap-4">
-            <div className="w-20 h-20 rounded-2xl border-4 border-white bg-blue-100 overflow-hidden flex items-center justify-center shadow-md flex-shrink-0">
+        <div className="h-24 gradient-primary" />
+        <div className="px-5 pb-5">
+          <div className="-mt-10 mb-4">
+            <div className="w-20 h-20 rounded-2xl border-4 border-white bg-blue-100 overflow-hidden flex items-center justify-center shadow-md">
               {child.photo ? (
                 <img src={child.photo} alt={child.fullName} className="object-cover w-full h-full" />
               ) : (
                 <span className="text-3xl">{child.gender === "male" ? "👦" : "👧"}</span>
               )}
             </div>
-            <div className="pb-1">
-              <h2 className="text-xl font-bold text-gray-800">{child.fullName}</h2>
-              {child.nickname && <p className="text-gray-400 text-sm">"{child.nickname}"</p>}
-            </div>
+          </div>
+          <div className="mb-4">
+            <h2 className="text-lg font-bold text-gray-800 leading-snug">{child.fullName}</h2>
+            {child.nickname && <p className="text-gray-400 text-sm mt-0.5">"{child.nickname}"</p>}
           </div>
 
           {/* Quick stats */}
