@@ -10,7 +10,6 @@ import Image from "next/image";
 
 export default function ChildDetailPage() {
   const { id } = useParams<{ id: string }>();
-  const router = useRouter();
   const [child, setChild] = useState<Child | null>(null);
   const [loading, setLoading] = useState(true);
 
@@ -23,18 +22,26 @@ export default function ChildDetailPage() {
 
   return (
     <div className="max-w-2xl mx-auto">
-      <div className="flex items-center gap-3 mb-8">
-        <Link href="/children" className="p-2 rounded-xl hover:bg-gray-100 transition">
-          <ArrowLeft className="w-5 h-5 text-gray-600" />
+      <div className="flex items-center justify-between mb-8">
+        <div className="flex items-center gap-3">
+          <Link href="/children" className="p-2 rounded-xl hover:bg-gray-100 transition">
+            <ArrowLeft className="w-5 h-5 text-gray-600" />
+          </Link>
+          <h1 className="text-2xl font-bold text-gray-800">Profil Anak</h1>
+        </div>
+        <Link
+          href={`/children/${id}/edit`}
+          className="flex items-center gap-2 gradient-primary text-white px-4 py-2 rounded-xl text-sm font-medium hover:opacity-90 transition"
+        >
+          <Edit2 className="w-4 h-4" /> Edit
         </Link>
-        <h1 className="text-2xl font-bold text-gray-800">Profil Anak</h1>
       </div>
 
       {/* Profile card */}
       <div className="bg-white rounded-2xl border overflow-hidden mb-6">
         <div className="h-32 gradient-primary" />
         <div className="px-6 pb-6">
-          <div className="-mt-10 mb-4 flex items-end justify-between">
+          <div className="-mt-10 mb-4">
             <div className="w-20 h-20 rounded-2xl border-4 border-white bg-blue-100 overflow-hidden flex items-center justify-center shadow-md">
               {child.photo ? (
                 <Image src={child.photo} alt={child.fullName} width={80} height={80} className="object-cover w-full h-full" />
@@ -56,7 +63,7 @@ export default function ChildDetailPage() {
             { label: "Tarikh Lahir", value: formatDate(child.birthDate) },
             { label: "Umur", value: calculateAge(child.birthDate) },
             { label: "Jantina", value: child.gender === "male" ? "Lelaki" : "Perempuan" },
-            { label: "Kumpulan Darah", value: child.bloodType ?? "—" },
+            { label: "Kumpulan Darah", value: child.bloodType || "—" },
           ].map((item) => (
             <div key={item.label}>
               <p className="text-xs text-gray-400 uppercase font-medium">{item.label}</p>
@@ -92,7 +99,7 @@ export default function ChildDetailPage() {
       )}
 
       {/* Quick links */}
-      <div className="grid grid-cols-2 gap-3">
+      <div className="grid grid-cols-3 gap-3">
         {[
           { href: "/growth", label: "📈 Perkembangan" },
           { href: "/attendance", label: "📋 Kehadiran" },
