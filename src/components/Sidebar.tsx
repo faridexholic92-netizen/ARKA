@@ -6,7 +6,7 @@ import { useAuthStore } from "@/store/authStore";
 import { logoutUser } from "@/services/authService";
 import {
   LayoutDashboard, Users, TrendingUp, CalendarCheck,
-  Trophy, LogOut, Menu, X, Star,
+  Trophy, LogOut, Menu, X, Star, Heart,
 } from "lucide-react";
 import { useState } from "react";
 
@@ -14,6 +14,7 @@ const navItems = [
   { href: "/dashboard", icon: LayoutDashboard, label: "Dashboard" },
   { href: "/children", icon: Users, label: "Profil Anak" },
   { href: "/growth", icon: TrendingUp, label: "Perkembangan" },
+  { href: "/health", icon: Heart, label: "Kesihatan" },
   { href: "/attendance", icon: CalendarCheck, label: "Kehadiran" },
   { href: "/achievements", icon: Trophy, label: "Pencapaian" },
 ];

@@ -2,9 +2,13 @@
 import { useEffect, useState } from "react";
 import { useAuthStore } from "@/store/authStore";
 import { getChildren } from "@/services/childService";
+import { getGrowthRecords } from "@/services/growthService";
+import { getAttendance, getAttendanceStats } from "@/services/attendanceService";
+import { getAchievements } from "@/services/achievementService";
+import { getHealthRecords } from "@/services/healthService";
 import { Child } from "@/types";
 import Link from "next/link";
-import { Users, TrendingUp, CalendarCheck, Trophy, Plus, ArrowRight } from "lucide-react";
+import { Users, TrendingUp, CalendarCheck, Trophy, Plus, ArrowRight, Heart } from "lucide-react";
 import { calculateAge, formatDate } from "@/lib/utils";
 import Image from "next/image";
 
@@ -12,21 +16,56 @@ export default function DashboardPage() {
   const { user } = useAuthStore();
   const [children, setChildren] = useState<Child[]>([]);
   const [loading, setLoading] = useState(true);
+  const [stats, setStats] = useState({ growth: 0, attendance: 0, achievements: 0, health: 0, attendancePct: 0 });
 
   useEffect(() => {
-    if (user) {
-      getChildren(user.id).then((data) => {
-        setChildren(data);
-        setLoading(false);
-      });
-    }
+    if (!user) return;
+    getChildren(user.id).then(async (kids) => {
+      setChildren(kids);
+
+      // fetch counts for all children in parallel
+      const allStats = await Promise.all(
+        kids.map(async (child) => {
+          const [growth, attendance, achievements, health] = await Promise.all([
+            getGrowthRecords(child.id),
+            getAttendance(child.id),
+            getAchievements(child.id),
+            getHealthRecords(child.id),
+          ]);
+          const aStat = getAttendanceStats(attendance);
+          return {
+            growth: growth.length,
+            attendance: attendance.length,
+            achievements: achievements.length,
+            health: health.length,
+            attendancePct: aStat.percentage,
+          };
+        })
+      );
+
+      const totals = allStats.reduce(
+        (acc, s) => ({
+          growth: acc.growth + s.growth,
+          attendance: acc.attendance + s.attendance,
+          achievements: acc.achievements + s.achievements,
+          health: acc.health + s.health,
+          attendancePct: acc.attendancePct + s.attendancePct,
+        }),
+        { growth: 0, attendance: 0, achievements: 0, health: 0, attendancePct: 0 }
+      );
+
+      const avgPct = allStats.length > 0 ? Math.round(totals.attendancePct / allStats.length) : 0;
+      setStats({ ...totals, attendancePct: avgPct });
+      setLoading(false);
+    });
   }, [user]);
 
-  const stats = [
+  const statCards = [
     { label: "Jumlah Anak", value: children.length, icon: Users, color: "bg-blue-500", href: "/children" },
-    { label: "Rekod Perkembangan", value: "—", icon: TrendingUp, color: "bg-emerald-500", href: "/growth" },
-    { label: "Rekod Kehadiran", value: "—", icon: CalendarCheck, color: "bg-orange-500", href: "/attendance" },
-    { label: "Pencapaian", value: "—", icon: Trophy, color: "bg-yellow-500", href: "/achievements" },
+    { label: "Rekod Perkembangan", value: loading ? "..." : stats.growth, icon: TrendingUp, color: "bg-emerald-500", href: "/growth" },
+    { label: "Kehadiran", value: loading ? "..." : `${stats.attendancePct}%`, icon: CalendarCheck, color: "bg-orange-500", href: "/attendance" },
+    { label: "Pencapaian", value: loading ? "..." : stats.achievements, icon: Trophy, color: "bg-yellow-500", href: "/achievements" },
+    { label: "Rekod Kesihatan", value: loading ? "..." : stats.health, icon: Heart, color: "bg-rose-500", href: "/health" },
   ];
 
   return (
@@ -40,8 +79,8 @@ export default function DashboardPage() {
       </div>
 
       {/* Stats */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
-        {stats.map((s) => (
+      <div className="grid grid-cols-2 lg:grid-cols-5 gap-4 mb-8">
+        {statCards.map((s) => (
           <Link key={s.label} href={s.href}>
             <div className="bg-white rounded-2xl p-5 shadow-sm border border-gray-100 card-hover cursor-pointer">
               <div className={`w-10 h-10 ${s.color} rounded-xl flex items-center justify-center mb-3`}>

@@ -55,3 +55,26 @@ export interface Achievement {
   recordDate: string;
   createdAt: string;
 }
+
+export type HealthCategory =
+  | "clinic"
+  | "vaccination"
+  | "medication"
+  | "allergy"
+  | "dental"
+  | "eye"
+  | "hospital";
+
+export interface HealthRecord {
+  id: string;
+  childId: string;
+  category: HealthCategory;
+  title: string;
+  description?: string;
+  hospital?: string;
+  doctor?: string;
+  medication?: string;
+  nextAppointment?: string;
+  recordDate: string;
+  createdAt: string;
+}

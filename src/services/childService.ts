@@ -2,7 +2,7 @@ import {
   collection, doc, addDoc, updateDoc, deleteDoc,
   getDocs, getDoc, query, where,
 } from "firebase/firestore";
-import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
+import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { db, storage } from "@/lib/firebase";
 import { Child } from "@/types";
 
@@ -33,23 +33,11 @@ export async function deleteChild(childId: string): Promise<void> {
   await deleteDoc(doc(db, "children", childId));
 }
 
+// FIX: guna uploadBytes — mudah dan tak stuck
 export async function uploadChildPhoto(childId: string, file: File): Promise<string> {
   const ext = file.name.split(".").pop() || "jpg";
   const storageRef = ref(storage, `children/${childId}/photo_${Date.now()}.${ext}`);
-  
-  return new Promise((resolve, reject) => {
-    const uploadTask = uploadBytesResumable(storageRef, file, {
-      contentType: file.type,
-    });
-    
-    uploadTask.on(
-      "state_changed",
-      null,
-      (error) => reject(error),
-      async () => {
-        const url = await getDownloadURL(uploadTask.snapshot.ref);
-        resolve(url);
-      }
-    );
-  });
+  const snapshot = await uploadBytes(storageRef, file, { contentType: file.type });
+  const url = await getDownloadURL(snapshot.ref);
+  return url;
 }
