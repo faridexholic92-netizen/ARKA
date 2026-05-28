@@ -6,11 +6,7 @@
   :root {
     --background: 0 0% 100%;
     --foreground: 222.2 84% 4.9%;
-    --primary: 221.2 83.2% 53.3%;
-    --primary-foreground: 210 40% 98%;
     --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 221.2 83.2% 53.3%;
     --radius: 0.75rem;
 
     /* Theme: Ocean Blue (default) */
@@ -19,9 +15,18 @@
     --theme-accent: #3b82f6;
     --theme-light: #eff6ff;
     --theme-text: #1e40af;
+
+    --card-bg: #ffffff;
+    --card-border: #f1f5f9;
+    --input-bg: #ffffff;
+    --input-text: #1e293b;
+    --input-border: #e2e8f0;
+    --body-bg: #f8fafc;
+    --text-primary: #1e293b;
+    --text-secondary: #64748b;
+    --text-muted: #94a3b8;
   }
 
-  /* Theme: Emerald Green */
   [data-theme="emerald"] {
     --theme-from: #059669;
     --theme-to: #047857;
@@ -30,7 +35,6 @@
     --theme-text: #047857;
   }
 
-  /* Theme: Purple */
   [data-theme="purple"] {
     --theme-from: #7c3aed;
     --theme-to: #6d28d9;
@@ -39,7 +43,6 @@
     --theme-text: #6d28d9;
   }
 
-  /* Theme: Rose */
   [data-theme="rose"] {
     --theme-from: #e11d48;
     --theme-to: #be123c;
@@ -48,7 +51,6 @@
     --theme-text: #be123c;
   }
 
-  /* Theme: Sunset Orange */
   [data-theme="orange"] {
     --theme-from: #ea580c;
     --theme-to: #c2410c;
@@ -57,23 +59,78 @@
     --theme-text: #c2410c;
   }
 
-  /* Theme: Dark */
+  /* Dark theme */
   [data-theme="dark"] {
-    --background: 222 47% 8%;
-    --foreground: 210 40% 98%;
-    --border: 217 32% 17%;
-    --theme-from: #1e293b;
-    --theme-to: #0f172a;
+    --theme-from: #334155;
+    --theme-to: #1e293b;
     --theme-accent: #38bdf8;
     --theme-light: #1e293b;
     --theme-text: #38bdf8;
+
+    --card-bg: #1e293b;
+    --card-border: #334155;
+    --input-bg: #0f172a;
+    --input-text: #f1f5f9;
+    --input-border: #475569;
+    --body-bg: #0f172a;
+    --text-primary: #f1f5f9;
+    --text-secondary: #94a3b8;
+    --text-muted: #64748b;
   }
 }
 
 @layer base {
   * { @apply border-border; }
-  body { @apply bg-gray-50 text-foreground; }
-  [data-theme="dark"] body { background: #0f172a; color: #f1f5f9; }
+
+  body {
+    background: var(--body-bg);
+    color: var(--text-primary);
+  }
+
+  /* Dark theme global overrides */
+  [data-theme="dark"] .bg-white {
+    background: var(--card-bg) !important;
+  }
+  [data-theme="dark"] .bg-gray-50 {
+    background: #0f172a !important;
+  }
+  [data-theme="dark"] .bg-gray-100 {
+    background: #1e293b !important;
+  }
+  [data-theme="dark"] .text-gray-800,
+  [data-theme="dark"] .text-gray-700,
+  [data-theme="dark"] .text-gray-600 {
+    color: #e2e8f0 !important;
+  }
+  [data-theme="dark"] .text-gray-500,
+  [data-theme="dark"] .text-gray-400 {
+    color: #94a3b8 !important;
+  }
+  [data-theme="dark"] .border,
+  [data-theme="dark"] .border-gray-100,
+  [data-theme="dark"] .border-gray-200 {
+    border-color: #334155 !important;
+  }
+
+  /* Input fields in dark mode */
+  [data-theme="dark"] input,
+  [data-theme="dark"] textarea,
+  [data-theme="dark"] select {
+    background: var(--input-bg) !important;
+    color: var(--input-text) !important;
+    border-color: var(--input-border) !important;
+  }
+  [data-theme="dark"] input::placeholder,
+  [data-theme="dark"] textarea::placeholder {
+    color: #475569 !important;
+  }
+  [data-theme="dark"] input[type="date"]::-webkit-calendar-picker-indicator {
+    filter: invert(1);
+  }
+  [data-theme="dark"] option {
+    background: #1e293b;
+    color: #f1f5f9;
+  }
 }
 
 @layer components {
@@ -86,7 +143,4 @@
   .gradient-emerald {
     @apply bg-gradient-to-br from-emerald-500 to-emerald-700;
   }
-  .theme-accent { color: var(--theme-accent); }
-  .theme-light { background: var(--theme-light); }
-  .theme-text { color: var(--theme-text); }
 }
