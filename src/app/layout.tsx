@@ -10,6 +10,10 @@ export const metadata: Metadata = {
   title: "ARKA — Arkib Rekod Kanak-Kanak",
   description: "Platform digital untuk memantau perkembangan anak secara sistematik",
   manifest: "/manifest.json",
+  icons: {
+    icon: "/favicon.png",
+    apple: "/logo.png",
+  },
   appleWebApp: {
     capable: true,
     statusBarStyle: "default",
@@ -30,6 +34,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="ms">
       <head>
         <link rel="manifest" href="/manifest.json" />
+        <link rel="icon" href="/favicon.png" type="image/png" />
+        <link rel="apple-touch-icon" href="/logo.png" />
         <meta name="mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="default" />

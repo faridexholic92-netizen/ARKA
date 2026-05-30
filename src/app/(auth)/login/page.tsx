@@ -2,6 +2,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import Image from "next/image";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -43,12 +44,14 @@ export default function LoginPage() {
     <div className="min-h-screen flex">
       {/* Left Panel */}
       <div className="hidden lg:flex lg:w-1/2 gradient-primary flex-col justify-center items-center text-white p-12">
-        <div className="text-8xl mb-6">🌟</div>
-        <h1 className="text-5xl font-bold mb-4">ARKA</h1>
+        <div className="mb-6">
+          <Image src="/logo.png" alt="ARKA Logo" width={160} height={160} className="object-contain drop-shadow-xl" />
+        </div>
+        <h1 className="text-5xl font-bold mb-3">ARKA</h1>
         <p className="text-xl text-blue-200 text-center max-w-sm">
           Arkib Rekod Kanak-Kanak
         </p>
-        <p className="text-blue-300 text-center max-w-sm mt-4">
+        <p className="text-blue-300 text-center max-w-sm mt-4 text-sm leading-relaxed">
           Platform digital untuk memantau pertumbuhan dan perkembangan anak anda secara sistematik.
         </p>
       </div>
@@ -57,8 +60,9 @@ export default function LoginPage() {
       <div className="w-full lg:w-1/2 flex items-center justify-center p-8 bg-white">
         <div className="w-full max-w-md">
           <div className="lg:hidden text-center mb-8">
-            <div className="text-5xl mb-2">🌟</div>
-            <h1 className="text-3xl font-bold text-blue-800">ARKA</h1>
+            <Image src="/logo.png" alt="ARKA Logo" width={90} height={90} className="object-contain mx-auto mb-3" />
+            <h1 className="text-2xl font-bold text-blue-800">ARKA</h1>
+            <p className="text-gray-500 text-sm">Arkib Rekod Kanak-Kanak</p>
           </div>
 
           <h2 className="text-2xl font-bold text-gray-800 mb-2">Selamat Datang</h2>

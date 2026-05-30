@@ -2,6 +2,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import Image from "next/image";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -48,13 +49,21 @@ export default function RegisterPage() {
   return (
     <div className="min-h-screen flex">
       <div className="hidden lg:flex lg:w-1/2 gradient-primary flex-col justify-center items-center text-white p-12">
-        <div className="text-8xl mb-6">🌟</div>
-        <h1 className="text-5xl font-bold mb-4">ARKA</h1>
+        <div className="mb-6">
+          <Image src="/logo.png" alt="ARKA Logo" width={160} height={160} className="object-contain drop-shadow-xl" />
+        </div>
+        <h1 className="text-5xl font-bold mb-3">ARKA</h1>
         <p className="text-blue-200 text-center max-w-sm text-xl">Mula perjalanan digital anak anda hari ini.</p>
       </div>
 
       <div className="w-full lg:w-1/2 flex items-center justify-center p-8 bg-white">
         <div className="w-full max-w-md">
+          <div className="lg:hidden text-center mb-8">
+            <Image src="/logo.png" alt="ARKA Logo" width={90} height={90} className="object-contain mx-auto mb-3" />
+            <h1 className="text-2xl font-bold text-blue-800">ARKA</h1>
+            <p className="text-gray-500 text-sm">Arkib Rekod Kanak-Kanak</p>
+          </div>
+
           <h2 className="text-2xl font-bold text-gray-800 mb-2">Buat Akaun Baru</h2>
           <p className="text-gray-500 mb-8">Daftar sebagai ibu bapa / penjaga</p>
 
@@ -64,9 +73,9 @@ export default function RegisterPage() {
 
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
             {[
-              { name: "name", label: "Nama Penuh", type: "text", placeholder: "Nama anda" },
-              { name: "email", label: "Email", type: "email", placeholder: "nama@email.com" },
-              { name: "password", label: "Kata Laluan", type: "password", placeholder: "••••••••" },
+              { name: "name",            label: "Nama Penuh",         type: "text",     placeholder: "Nama anda" },
+              { name: "email",           label: "Email",              type: "email",    placeholder: "nama@email.com" },
+              { name: "password",        label: "Kata Laluan",        type: "password", placeholder: "••••••••" },
               { name: "confirmPassword", label: "Sahkan Kata Laluan", type: "password", placeholder: "••••••••" },
             ].map((field) => (
               <div key={field.name}>

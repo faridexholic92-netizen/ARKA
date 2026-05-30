@@ -6,18 +6,19 @@ import { useAuthStore } from "@/store/authStore";
 import { logoutUser } from "@/services/authService";
 import {
   LayoutDashboard, Users, TrendingUp, CalendarCheck,
-  Trophy, LogOut, Menu, X, Star, Heart,
+  Trophy, LogOut, Menu, X, Heart,
 } from "lucide-react";
 import { ThemeSwitcher } from "@/components/ThemeSwitcher";
 import { useState } from "react";
+import Image from "next/image";
 
 const navItems = [
-  { href: "/dashboard", icon: LayoutDashboard, label: "Dashboard" },
-  { href: "/children", icon: Users, label: "Profil Anak" },
-  { href: "/growth", icon: TrendingUp, label: "Perkembangan" },
-  { href: "/health", icon: Heart, label: "Kesihatan" },
-  { href: "/attendance", icon: CalendarCheck, label: "Kehadiran" },
-  { href: "/achievements", icon: Trophy, label: "Pencapaian" },
+  { href: "/dashboard",    icon: LayoutDashboard, label: "Dashboard" },
+  { href: "/children",     icon: Users,           label: "Profil Anak" },
+  { href: "/growth",       icon: TrendingUp,      label: "Perkembangan" },
+  { href: "/health",       icon: Heart,           label: "Kesihatan" },
+  { href: "/attendance",   icon: CalendarCheck,   label: "Kehadiran" },
+  { href: "/achievements", icon: Trophy,          label: "Pencapaian" },
 ];
 
 export function Sidebar() {
@@ -35,13 +36,13 @@ export function Sidebar() {
   const SidebarContent = () => (
     <div className="flex flex-col h-full">
       {/* Logo */}
-      <div className="p-6 border-b border-blue-700">
+      <div className="p-5 border-b border-blue-700">
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 bg-white bg-opacity-20 rounded-xl flex items-center justify-center">
-            <Star className="w-6 h-6 text-white" />
+          <div className="w-12 h-12 rounded-xl overflow-hidden flex-shrink-0 bg-white flex items-center justify-center">
+            <Image src="/logo.png" alt="ARKA Logo" width={48} height={48} className="object-contain" />
           </div>
           <div>
-            <h1 className="text-white font-bold text-xl">ARKA</h1>
+            <h1 className="text-white font-bold text-xl leading-tight">ARKA</h1>
             <p className="text-blue-300 text-xs">Arkib Rekod Kanak-Kanak</p>
           </div>
         </div>
