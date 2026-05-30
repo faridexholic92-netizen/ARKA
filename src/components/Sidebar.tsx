@@ -6,7 +6,7 @@ import { useAuthStore } from "@/store/authStore";
 import { logoutUser } from "@/services/authService";
 import {
   LayoutDashboard, Users, TrendingUp, CalendarCheck,
-  Trophy, LogOut, Menu, X, Heart,
+  Trophy, LogOut, Menu, X, Heart, Search, BarChart2,
 } from "lucide-react";
 import { ThemeSwitcher } from "@/components/ThemeSwitcher";
 import { useState } from "react";
@@ -19,6 +19,7 @@ const navItems = [
   { href: "/health",       icon: Heart,           label: "Kesihatan" },
   { href: "/attendance",   icon: CalendarCheck,   label: "Kehadiran" },
   { href: "/achievements", icon: Trophy,          label: "Pencapaian" },
+  { href: "/stats",        icon: BarChart2,        label: "Statistik" },
 ];
 
 export function Sidebar() {
@@ -33,6 +34,10 @@ export function Sidebar() {
     router.push("/login");
   };
 
+  function openSearch() {
+    window.dispatchEvent(new KeyboardEvent("keydown", { key: "k", ctrlKey: true, bubbles: true }));
+  }
+
   const SidebarContent = () => (
     <div className="flex flex-col h-full">
       {/* Logo */}
@@ -46,6 +51,16 @@ export function Sidebar() {
             <p className="text-blue-300 text-xs">Arkib Rekod Kanak-Kanak</p>
           </div>
         </div>
+
+        {/* Search button */}
+        <button
+          onClick={openSearch}
+          className="mt-3 w-full flex items-center gap-2 bg-white/10 hover:bg-white/20 text-blue-200 px-3 py-2 rounded-xl text-xs transition"
+        >
+          <Search className="w-3.5 h-3.5" />
+          <span>Cari...</span>
+          <kbd className="ml-auto bg-white/10 px-1.5 py-0.5 rounded text-[10px] font-mono">⌘K</kbd>
+        </button>
       </div>
 
       {/* Nav */}
@@ -96,7 +111,6 @@ export function Sidebar() {
 
   return (
     <>
-      {/* Mobile toggle */}
       <button
         className="lg:hidden fixed top-4 left-4 z-50 bg-blue-800 text-white p-2 rounded-xl shadow-lg"
         onClick={() => setMobileOpen(!mobileOpen)}
@@ -104,12 +118,10 @@ export function Sidebar() {
         {mobileOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
       </button>
 
-      {/* Mobile overlay */}
       {mobileOpen && (
         <div className="lg:hidden fixed inset-0 z-40 bg-black bg-opacity-50" onClick={() => setMobileOpen(false)} />
       )}
 
-      {/* Mobile sidebar */}
       <aside className={cn(
         "lg:hidden fixed left-0 top-0 h-full w-72 gradient-primary z-50 transform transition-transform duration-300",
         mobileOpen ? "translate-x-0" : "-translate-x-full"
@@ -117,7 +129,6 @@ export function Sidebar() {
         <SidebarContent />
       </aside>
 
-      {/* Desktop sidebar */}
       <aside className="hidden lg:flex lg:flex-col lg:w-64 gradient-primary fixed h-full left-0 top-0 z-40">
         <SidebarContent />
       </aside>

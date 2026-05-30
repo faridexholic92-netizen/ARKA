@@ -5,6 +5,7 @@ import { useAuthStore } from "@/store/authStore";
 import { Sidebar } from "@/components/Sidebar";
 import { BottomNav } from "@/components/BottomNav";
 import { ToastContainer } from "@/components/Toast";
+import { GlobalSearch } from "@/components/GlobalSearch";
 import Image from "next/image";
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
@@ -20,13 +21,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
       <div className="min-h-screen flex items-center justify-center gradient-primary">
         <div className="text-center text-white">
           <div className="mb-4 flex justify-center">
-            <Image
-              src="/logo.png"
-              alt="ARKA"
-              width={100}
-              height={100}
-              className="object-contain animate-pulse drop-shadow-xl"
-            />
+            <Image src="/logo.png" alt="ARKA" width={100} height={100} className="object-contain animate-pulse drop-shadow-xl" />
           </div>
           <p className="text-blue-200 text-sm mt-2">Memuatkan ARKA...</p>
         </div>
@@ -44,6 +39,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
       </main>
       <BottomNav />
       <ToastContainer />
+      <GlobalSearch />
     </div>
   );
 }

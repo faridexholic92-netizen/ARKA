@@ -1,5 +1,5 @@
 import {
-  collection, addDoc, getDocs, query, where, deleteDoc, doc,
+  collection, addDoc, getDocs, query, where, deleteDoc, doc, updateDoc,
 } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 import { AttendanceRecord } from "@/types";
@@ -11,6 +11,13 @@ export async function addAttendance(
   const record: Omit<AttendanceRecord, "id"> = { ...data, childId, createdAt: new Date().toISOString() };
   const docRef = await addDoc(collection(db, "attendance"), record);
   return { id: docRef.id, ...record };
+}
+
+export async function updateAttendanceRecord(
+  recordId: string,
+  data: { status: AttendanceRecord["status"]; attendanceDate: string; notes?: string }
+): Promise<void> {
+  await updateDoc(doc(db, "attendance", recordId), data);
 }
 
 export async function getAttendance(childId: string): Promise<AttendanceRecord[]> {

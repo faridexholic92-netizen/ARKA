@@ -1,5 +1,5 @@
 import {
-  collection, addDoc, getDocs, query, where, deleteDoc, doc,
+  collection, addDoc, getDocs, query, where, deleteDoc, doc, updateDoc,
 } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 import { Achievement } from "@/types";
@@ -11,6 +11,13 @@ export async function addAchievement(
   const record: Omit<Achievement, "id"> = { ...data, childId, createdAt: new Date().toISOString() };
   const docRef = await addDoc(collection(db, "achievements"), record);
   return { id: docRef.id, ...record };
+}
+
+export async function updateAchievement(
+  recordId: string,
+  data: Omit<Achievement, "id" | "childId" | "createdAt">
+): Promise<void> {
+  await updateDoc(doc(db, "achievements", recordId), data);
 }
 
 export async function getAchievements(childId: string): Promise<Achievement[]> {

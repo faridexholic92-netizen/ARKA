@@ -1,5 +1,5 @@
 import {
-  collection, addDoc, getDocs, query, where, deleteDoc, doc,
+  collection, addDoc, getDocs, query, where, deleteDoc, doc, updateDoc,
 } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 import { GrowthRecord } from "@/types";
@@ -13,6 +13,14 @@ export async function addGrowthRecord(
   const record: Omit<GrowthRecord, "id"> = { ...data, childId, bmi, createdAt: new Date().toISOString() };
   const docRef = await addDoc(collection(db, "growthRecords"), record);
   return { id: docRef.id, ...record };
+}
+
+export async function updateGrowthRecord(
+  recordId: string,
+  data: { weight: number; height: number; headSize?: number; recordDate: string; notes?: string }
+): Promise<void> {
+  const bmi = calculateBMI(data.weight, data.height);
+  await updateDoc(doc(db, "growthRecords", recordId), { ...data, bmi });
 }
 
 export async function getGrowthRecords(childId: string): Promise<GrowthRecord[]> {

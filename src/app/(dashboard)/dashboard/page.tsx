@@ -10,6 +10,7 @@ import { Child } from "@/types";
 import Link from "next/link";
 import { Users, TrendingUp, CalendarCheck, Trophy, Plus, ArrowRight, Heart } from "lucide-react";
 import { calculateAge } from "@/lib/utils";
+import { OnboardingModal } from "@/components/OnboardingModal";
 
 function getGreeting() {
   const h = new Date().getHours();
@@ -51,7 +52,10 @@ export default function DashboardPage() {
           return { growth: growth.length, attendance: attendance.length, achievements: achievements.length, health: health.length, attendancePct: aStat.percentage };
         })
       );
-      const totals = allStats.reduce((acc, s) => ({ growth: acc.growth + s.growth, attendance: acc.attendance + s.attendance, achievements: acc.achievements + s.achievements, health: acc.health + s.health, attendancePct: acc.attendancePct + s.attendancePct }), { growth: 0, attendance: 0, achievements: 0, health: 0, attendancePct: 0 });
+      const totals = allStats.reduce(
+        (acc, s) => ({ growth: acc.growth + s.growth, attendance: acc.attendance + s.attendance, achievements: acc.achievements + s.achievements, health: acc.health + s.health, attendancePct: acc.attendancePct + s.attendancePct }),
+        { growth: 0, attendance: 0, achievements: 0, health: 0, attendancePct: 0 }
+      );
       const avgPct = allStats.length > 0 ? Math.round(totals.attendancePct / allStats.length) : 0;
       setStats({ ...totals, attendancePct: avgPct });
       setLoading(false);
@@ -59,15 +63,18 @@ export default function DashboardPage() {
   }, [user]);
 
   const statCards = [
-    { label: "Jumlah Anak",        value: children.length,                       icon: Users,         color: "bg-blue-500",    href: "/children" },
-    { label: "Rekod Tumbesaran",    value: loading ? "..." : stats.growth,        icon: TrendingUp,    color: "bg-emerald-500", href: "/growth" },
-    { label: "Kehadiran",           value: loading ? "..." : `${stats.attendancePct}%`, icon: CalendarCheck, color: "bg-orange-500",  href: "/attendance" },
-    { label: "Pencapaian",          value: loading ? "..." : stats.achievements,  icon: Trophy,        color: "bg-yellow-500",  href: "/achievements" },
-    { label: "Rekod Kesihatan",     value: loading ? "..." : stats.health,        icon: Heart,         color: "bg-rose-500",    href: "/health" },
+    { label: "Jumlah Anak",       value: children.length,                      icon: Users,         color: "bg-blue-500",    href: "/children" },
+    { label: "Rekod Tumbesaran",   value: loading ? "..." : stats.growth,       icon: TrendingUp,    color: "bg-emerald-500", href: "/growth" },
+    { label: "Kehadiran",          value: loading ? "..." : `${stats.attendancePct}%`, icon: CalendarCheck, color: "bg-orange-500",  href: "/attendance" },
+    { label: "Pencapaian",         value: loading ? "..." : stats.achievements, icon: Trophy,        color: "bg-yellow-500",  href: "/achievements" },
+    { label: "Rekod Kesihatan",    value: loading ? "..." : stats.health,       icon: Heart,         color: "bg-rose-500",    href: "/health" },
   ];
 
   return (
     <div>
+      {/* Onboarding — only shows for new users */}
+      {!loading && children.length === 0 && <OnboardingModal />}
+
       {/* Greeting */}
       <div className="mb-6">
         {loading ? <Skeleton /> : (
