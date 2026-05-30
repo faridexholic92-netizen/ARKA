@@ -8,7 +8,7 @@ import { getAchievements } from "@/services/achievementService";
 import { getHealthRecords } from "@/services/healthService";
 import { Child } from "@/types";
 import Link from "next/link";
-import { Users, TrendingUp, CalendarCheck, Trophy, Plus, ArrowRight, Heart } from "lucide-react";
+import { Users, TrendingUp, CalendarCheck, Trophy, Plus, ArrowRight, Heart, UserRound } from "lucide-react";
 import { calculateAge } from "@/lib/utils";
 import { OnboardingModal } from "@/components/OnboardingModal";
 
@@ -129,7 +129,7 @@ export default function DashboardPage() {
           </div>
         ) : children.length === 0 ? (
           <div className="text-center py-10">
-            <div className="text-5xl mb-3">👶</div>
+            <div className="flex justify-center mb-3"><div className="w-14 h-14 bg-gray-100 rounded-2xl flex items-center justify-center"><UserRound className="w-7 h-7 text-gray-400" /></div></div>
             <p className="text-gray-500 font-medium">Belum ada profil anak</p>
             <p className="text-gray-400 text-sm mt-1">Tambah profil anak pertama anda</p>
             <Link href="/children/add" className="inline-flex items-center gap-2 gradient-primary text-white px-5 py-2.5 rounded-xl mt-4 font-medium hover:opacity-90 transition text-sm">

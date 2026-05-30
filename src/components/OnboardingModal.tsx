@@ -2,23 +2,31 @@
 import { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { X } from "lucide-react";
+import { X, UserRound, BarChart2 } from "lucide-react";
 
 const STEPS = [
   {
-    emoji: null,
+    icon: null as React.ReactNode,
     title: "Selamat Datang ke ARKA! 🎉",
     desc: "Platform arkib digital untuk memantau perkembangan, kesihatan dan pencapaian anak anda secara sistematik.",
     cta: "Mulakan",
   },
   {
-    emoji: "👶",
+    icon: (
+      <div className="w-16 h-16 bg-blue-50 rounded-2xl flex items-center justify-center mx-auto">
+        <UserRound className="w-8 h-8 text-blue-500" />
+      </div>
+    ) as React.ReactNode,
     title: "Tambah Profil Anak",
     desc: "Mulakan dengan menambah profil anak anda. Lengkapkan maklumat seperti nama, tarikh lahir, dan gambar.",
     cta: "Seterusnya",
   },
   {
-    emoji: "📊",
+    icon: (
+      <div className="w-16 h-16 bg-emerald-50 rounded-2xl flex items-center justify-center mx-auto">
+        <BarChart2 className="w-8 h-8 text-emerald-500" />
+      </div>
+    ) as React.ReactNode,
     title: "Rekod & Pantau",
     desc: "Rekod pertumbuhan, kehadiran, kesihatan dan pencapaian anak. Semua data tersimpan dengan selamat.",
     cta: "Siap! Mula Sekarang",
@@ -52,14 +60,14 @@ export function OnboardingModal() {
           <X className="w-5 h-5" />
         </button>
 
-        {/* Logo on step 0, emoji on others */}
-        {step === 0 ? (
-          <div className="flex justify-center mb-5">
-            <Image src="/logo.png" alt="ARKA" width={100} height={100} className="object-contain" />
-          </div>
-        ) : (
-          <div className="text-6xl mb-5">{current.emoji}</div>
-        )}
+        {/* Icon area */}
+        <div className="mb-5">
+          {step === 0 ? (
+            <Image src="/logo.png" alt="ARKA" width={100} height={100} className="object-contain mx-auto" />
+          ) : (
+            current.icon
+          )}
+        </div>
 
         <h2 className="text-xl font-bold text-gray-800 mb-3">{current.title}</h2>
         <p className="text-gray-500 text-sm leading-relaxed mb-8">{current.desc}</p>

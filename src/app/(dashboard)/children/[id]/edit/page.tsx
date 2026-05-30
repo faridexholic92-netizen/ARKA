@@ -6,7 +6,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { getChild, updateChild, uploadChildPhoto } from "@/services/childService";
 import { toast } from "@/components/Toast";
-import { ArrowLeft, Upload } from "lucide-react";
+import { ArrowLeft, Upload, UserRound } from "lucide-react";
 import Link from "next/link";
 
 const STATES = ["Johor","Kedah","Kelantan","Melaka","Negeri Sembilan","Pahang","Perak","Perlis","Pulau Pinang","Sabah","Sarawak","Selangor","Terengganu","W.P. Kuala Lumpur","W.P. Labuan","W.P. Putrajaya"];
@@ -151,7 +151,7 @@ export default function EditChildPage() {
           <h2 className="font-semibold text-gray-700 mb-4">📷 Foto Anak</h2>
           <div className="flex items-center gap-6">
             <div className="w-24 h-24 rounded-2xl bg-gray-100 flex items-center justify-center overflow-hidden border-2 border-dashed border-gray-300">
-              {photoPreview ? <img src={photoPreview} alt="Preview" className="w-full h-full object-cover" /> : <span className="text-4xl">👶</span>}
+              {photoPreview ? <img src={photoPreview} alt="Preview" className="w-full h-full object-cover" /> : <UserRound className="w-10 h-10 text-gray-400" />}
             </div>
             <label className="flex items-center gap-2 bg-gray-50 hover:bg-gray-100 text-gray-700 px-4 py-2.5 rounded-xl cursor-pointer transition border text-sm font-medium">
               <Upload className="w-4 h-4" /> Tukar Foto

@@ -4,7 +4,7 @@ import { useAuthStore } from "@/store/authStore";
 import { getChildren, deleteChild } from "@/services/childService";
 import { Child } from "@/types";
 import Link from "next/link";
-import { Plus, Trash2, Eye, Search } from "lucide-react";
+import { Plus, Trash2, Eye, Search, UserRound } from "lucide-react";
 import { calculateAge } from "@/lib/utils";
 
 
@@ -56,7 +56,7 @@ export default function ChildrenPage() {
         <div className="text-center py-16 text-gray-400">Memuatkan...</div>
       ) : filtered.length === 0 ? (
         <div className="text-center py-16 bg-white rounded-2xl border">
-          <div className="text-5xl mb-4">👶</div>
+          <div className="flex justify-center mb-4"><div className="w-16 h-16 bg-gray-100 rounded-2xl flex items-center justify-center"><UserRound className="w-8 h-8 text-gray-400" /></div></div>
           <p className="text-gray-500 font-medium">Tiada profil anak ditemui</p>
           <Link href="/children/add" className="inline-flex items-center gap-2 gradient-primary text-white px-6 py-3 rounded-xl mt-4 font-medium hover:opacity-90 transition">
             <Plus className="w-4 h-4" /> Tambah Anak

@@ -11,7 +11,7 @@ import {
   LineChart, Line, BarChart, Bar, PieChart, Pie, Cell,
   XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer,
 } from "recharts";
-import { BarChart2 } from "lucide-react";
+import { BarChart2, Users } from "lucide-react";
 
 const COLORS = ["#3b82f6","#10b981","#f59e0b","#ef4444","#8b5cf6","#f97316","#06b6d4"];
 
@@ -100,14 +100,14 @@ export default function StatsPage() {
       {/* Summary cards */}
       <div className="grid grid-cols-2 lg:grid-cols-5 gap-3 mb-8">
         {[
-          { label: "Jumlah Anak",     value: children.length,  emoji: "👶", color: "bg-blue-50 text-blue-700" },
-          { label: "Rekod Tumbesaran", value: totalGrowth,      emoji: "📏", color: "bg-emerald-50 text-emerald-700" },
-          { label: "Kehadiran (%)",    value: `${avgAttendance}%`, emoji: "📅", color: "bg-orange-50 text-orange-700" },
-          { label: "Pencapaian",       value: totalAch,          emoji: "🏆", color: "bg-yellow-50 text-yellow-700" },
-          { label: "Rekod Kesihatan",  value: totalHealth,       emoji: "❤️", color: "bg-rose-50 text-rose-700" },
+          { label: "Jumlah Anak",      value: children.length,        icon: <Users className="w-5 h-5" />, color: "bg-blue-50 text-blue-700" },
+          { label: "Rekod Tumbesaran", value: totalGrowth,             icon: <span className="text-xl">📏</span>, color: "bg-emerald-50 text-emerald-700" },
+          { label: "Kehadiran (%)",    value: `${avgAttendance}%`,    icon: <span className="text-xl">📅</span>, color: "bg-orange-50 text-orange-700" },
+          { label: "Pencapaian",       value: totalAch,                icon: <span className="text-xl">🏆</span>, color: "bg-yellow-50 text-yellow-700" },
+          { label: "Rekod Kesihatan",  value: totalHealth,             icon: <span className="text-xl">❤️</span>, color: "bg-rose-50 text-rose-700" },
         ].map((s) => (
           <div key={s.label} className={`${s.color} rounded-2xl p-4 text-center`}>
-            <div className="text-2xl mb-1">{s.emoji}</div>
+            <div className="flex justify-center mb-1">{s.icon}</div>
             <p className="text-2xl font-bold">{s.value}</p>
             <p className="text-xs mt-0.5 opacity-80">{s.label}</p>
           </div>
