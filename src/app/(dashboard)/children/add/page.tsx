@@ -10,12 +10,41 @@ import { toast } from "@/components/Toast";
 import { ArrowLeft, Upload } from "lucide-react";
 import Link from "next/link";
 
+const STATES = ["Johor","Kedah","Kelantan","Melaka","Negeri Sembilan","Pahang","Perak","Perlis","Pulau Pinang","Sabah","Sarawak","Selangor","Terengganu","W.P. Kuala Lumpur","W.P. Labuan","W.P. Putrajaya"];
+const RACES = ["Melayu","Cina","India","Iban","Kadazan","Bajau","Murut","Orang Asli","Lain-lain"];
+const RELIGIONS = ["Islam","Kristian","Buddha","Hindu","Sikh","Tiada"];
+
+const inputCls = "w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white";
+const labelCls = "block text-sm font-medium text-gray-700 mb-1";
+
 const schema = z.object({
   fullName: z.string().min(2, "Nama minimum 2 aksara"),
   nickname: z.string().optional(),
   birthDate: z.string().min(1, "Tarikh lahir diperlukan"),
   gender: z.enum(["male", "female"]),
   bloodType: z.string().optional(),
+  icNumber: z.string().optional(),
+  birthCertNo: z.string().optional(),
+  passportNo: z.string().optional(),
+  birthPlace: z.string().optional(),
+  nationality: z.string().optional(),
+  race: z.string().optional(),
+  religion: z.string().optional(),
+  address: z.string().optional(),
+  postcode: z.string().optional(),
+  city: z.string().optional(),
+  state: z.string().optional(),
+  schoolName: z.string().optional(),
+  schoolYear: z.string().optional(),
+  schoolClass: z.string().optional(),
+  fatherName: z.string().optional(),
+  fatherIc: z.string().optional(),
+  fatherPhone: z.string().optional(),
+  fatherJob: z.string().optional(),
+  motherName: z.string().optional(),
+  motherIc: z.string().optional(),
+  motherPhone: z.string().optional(),
+  motherJob: z.string().optional(),
   emergencyContact: z.string().optional(),
   emergencyPhone: z.string().optional(),
   medicalNotes: z.string().optional(),
@@ -33,15 +62,12 @@ export default function AddChildPage() {
 
   const { register, handleSubmit, formState: { errors } } = useForm<FormData>({
     resolver: zodResolver(schema),
-    defaultValues: { gender: "male" },
+    defaultValues: { gender: "male", nationality: "Malaysia" },
   });
 
   const handlePhoto = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
-    if (file) {
-      setPhotoFile(file);
-      setPhotoPreview(URL.createObjectURL(file));
-    }
+    if (file) { setPhotoFile(file); setPhotoPreview(URL.createObjectURL(file)); }
   };
 
   const onSubmit = async (data: FormData) => {
@@ -57,7 +83,6 @@ export default function AddChildPage() {
       toast.success("Profil anak berjaya ditambah! 🎉");
       router.push("/children");
     } catch (e: any) {
-      console.error("Upload error:", e);
       setError(`Gagal menyimpan: ${e?.message || "Cuba lagi."}`);
     } finally {
       setLoading(false);
@@ -79,82 +104,213 @@ export default function AddChildPage() {
       {error && <div className="bg-red-50 border border-red-200 text-red-600 px-4 py-3 rounded-xl mb-6 text-sm">{error}</div>}
 
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-        {/* Photo */}
+
+        {/* FOTO */}
         <div className="bg-white rounded-2xl border p-6">
-          <h2 className="font-semibold text-gray-700 mb-4">Foto Anak</h2>
+          <h2 className="font-semibold text-gray-700 mb-4">📷 Foto Anak</h2>
           <div className="flex items-center gap-6">
             <div className="w-24 h-24 rounded-2xl bg-gray-100 flex items-center justify-center overflow-hidden border-2 border-dashed border-gray-300">
-              {photoPreview ? (
-                <img src={photoPreview} alt="Preview" className="w-full h-full object-cover" />
-              ) : (
-                <span className="text-4xl">👶</span>
-              )}
+              {photoPreview ? <img src={photoPreview} alt="Preview" className="w-full h-full object-cover" /> : <span className="text-4xl">👶</span>}
             </div>
             <label className="flex items-center gap-2 bg-gray-50 hover:bg-gray-100 text-gray-700 px-4 py-2.5 rounded-xl cursor-pointer transition border text-sm font-medium">
-              <Upload className="w-4 h-4" />
-              Muat Naik Foto
+              <Upload className="w-4 h-4" /> Muat Naik Foto
               <input type="file" accept="image/*" onChange={handlePhoto} className="hidden" />
             </label>
           </div>
         </div>
 
-        {/* Basic Info */}
+        {/* MAKLUMAT ASAS */}
         <div className="bg-white rounded-2xl border p-6 space-y-5">
-          <h2 className="font-semibold text-gray-700">Maklumat Asas</h2>
+          <h2 className="font-semibold text-gray-700">👤 Maklumat Asas</h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div className="sm:col-span-2">
-              <label className="block text-sm font-medium text-gray-700 mb-1">Nama Penuh *</label>
-              <input {...register("fullName")} className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Nama penuh anak" />
+              <label className={labelCls}>Nama Penuh *</label>
+              <input {...register("fullName")} className={inputCls} placeholder="Nama penuh anak" />
               {errors.fullName && <p className="text-red-500 text-xs mt-1">{errors.fullName.message}</p>}
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Nama Panggilan</label>
-              <input {...register("nickname")} className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Nama panggilan" />
+              <label className={labelCls}>Nama Panggilan</label>
+              <input {...register("nickname")} className={inputCls} placeholder="Nama panggilan" />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Tarikh Lahir *</label>
-              <input {...register("birthDate")} type="date" className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500" />
+              <label className={labelCls}>Tarikh Lahir *</label>
+              <input {...register("birthDate")} type="date" className={inputCls} />
               {errors.birthDate && <p className="text-red-500 text-xs mt-1">{errors.birthDate.message}</p>}
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Jantina *</label>
-              <select {...register("gender")} className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white">
+              <label className={labelCls}>Jantina *</label>
+              <select {...register("gender")} className={inputCls}>
                 <option value="male">Lelaki</option>
                 <option value="female">Perempuan</option>
               </select>
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Kumpulan Darah</label>
-              <select {...register("bloodType")} className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white">
+              <label className={labelCls}>Kumpulan Darah</label>
+              <select {...register("bloodType")} className={inputCls}>
                 <option value="">Tidak pasti</option>
-                {["A+","A-","B+","B-","AB+","AB-","O+","O-"].map((b) => <option key={b} value={b}>{b}</option>)}
+                {["A+","A-","B+","B-","AB+","AB-","O+","O-"].map((b) => (
+                  <option key={b} value={b}>{b}</option>
+                ))}
               </select>
             </div>
           </div>
         </div>
 
-        {/* Emergency */}
-        <div className="bg-white rounded-2xl border p-6 space-y-4">
-          <h2 className="font-semibold text-gray-700">Kenalan Kecemasan</h2>
+        {/* MAKLUMAT RASMI */}
+        <div className="bg-white rounded-2xl border p-6 space-y-5">
+          <h2 className="font-semibold text-gray-700">🪪 Maklumat Rasmi</h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Nama</label>
-              <input {...register("emergencyContact")} className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Nama kenalan" />
+              <label className={labelCls}>No. MyKid / No. Kad Pengenalan</label>
+              <input {...register("icNumber")} className={inputCls} placeholder="000000-00-0000" maxLength={14} />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">No. Telefon</label>
-              <input {...register("emergencyPhone")} className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="01x-xxxxxxx" />
+              <label className={labelCls}>No. Sijil Kelahiran</label>
+              <input {...register("birthCertNo")} className={inputCls} placeholder="cth: B-00000000" />
+            </div>
+            <div>
+              <label className={labelCls}>No. Passport (jika ada)</label>
+              <input {...register("passportNo")} className={inputCls} placeholder="A00000000" />
+            </div>
+            <div>
+              <label className={labelCls}>Tempat Lahir</label>
+              <input {...register("birthPlace")} className={inputCls} placeholder="cth: Hospital KL" />
+            </div>
+            <div>
+              <label className={labelCls}>Kerakyatan</label>
+              <input {...register("nationality")} className={inputCls} placeholder="Malaysia" />
+            </div>
+            <div>
+              <label className={labelCls}>Bangsa</label>
+              <select {...register("race")} className={inputCls}>
+                <option value="">Pilih bangsa</option>
+                {RACES.map((r) => <option key={r} value={r}>{r}</option>)}
+              </select>
+            </div>
+            <div>
+              <label className={labelCls}>Agama</label>
+              <select {...register("religion")} className={inputCls}>
+                <option value="">Pilih agama</option>
+                {RELIGIONS.map((r) => <option key={r} value={r}>{r}</option>)}
+              </select>
             </div>
           </div>
         </div>
 
-        {/* Medical */}
-        <div className="bg-white rounded-2xl border p-6">
-          <h2 className="font-semibold text-gray-700 mb-4">Nota Perubatan</h2>
-          <textarea {...register("medicalNotes")} rows={3} className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none" placeholder="Alahan, penyakit kronik, nota khas..." />
+        {/* ALAMAT */}
+        <div className="bg-white rounded-2xl border p-6 space-y-5">
+          <h2 className="font-semibold text-gray-700">🏠 Alamat</h2>
+          <div>
+            <label className={labelCls}>Alamat Penuh</label>
+            <textarea {...register("address")} rows={3} className={`${inputCls} resize-none`} placeholder="No. rumah, jalan, taman..." />
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <div>
+              <label className={labelCls}>Poskod</label>
+              <input {...register("postcode")} className={inputCls} placeholder="00000" maxLength={5} />
+            </div>
+            <div>
+              <label className={labelCls}>Bandar</label>
+              <input {...register("city")} className={inputCls} placeholder="cth: Petaling Jaya" />
+            </div>
+            <div>
+              <label className={labelCls}>Negeri</label>
+              <select {...register("state")} className={inputCls}>
+                <option value="">Pilih negeri</option>
+                {STATES.map((s) => <option key={s} value={s}>{s}</option>)}
+              </select>
+            </div>
+          </div>
         </div>
 
-        <div className="flex gap-3">
+        {/* MAKLUMAT SEKOLAH */}
+        <div className="bg-white rounded-2xl border p-6 space-y-5">
+          <h2 className="font-semibold text-gray-700">🏫 Maklumat Sekolah / Tadika</h2>
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <div className="sm:col-span-3">
+              <label className={labelCls}>Nama Sekolah / Tadika</label>
+              <input {...register("schoolName")} className={inputCls} placeholder="cth: SK Taman Jaya" />
+            </div>
+            <div>
+              <label className={labelCls}>Darjah / Tahun</label>
+              <input {...register("schoolYear")} className={inputCls} placeholder="cth: Darjah 1" />
+            </div>
+            <div>
+              <label className={labelCls}>Kelas</label>
+              <input {...register("schoolClass")} className={inputCls} placeholder="cth: Kelas Amanah" />
+            </div>
+          </div>
+        </div>
+
+        {/* MAKLUMAT BAPA */}
+        <div className="bg-white rounded-2xl border p-6 space-y-5">
+          <h2 className="font-semibold text-gray-700">👨 Maklumat Bapa</h2>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <label className={labelCls}>Nama Penuh</label>
+              <input {...register("fatherName")} className={inputCls} placeholder="Nama bapa" />
+            </div>
+            <div>
+              <label className={labelCls}>No. Kad Pengenalan</label>
+              <input {...register("fatherIc")} className={inputCls} placeholder="000000-00-0000" maxLength={14} />
+            </div>
+            <div>
+              <label className={labelCls}>No. Telefon</label>
+              <input {...register("fatherPhone")} className={inputCls} placeholder="01x-xxxxxxx" />
+            </div>
+            <div>
+              <label className={labelCls}>Pekerjaan</label>
+              <input {...register("fatherJob")} className={inputCls} placeholder="cth: Jurutera" />
+            </div>
+          </div>
+        </div>
+
+        {/* MAKLUMAT IBU */}
+        <div className="bg-white rounded-2xl border p-6 space-y-5">
+          <h2 className="font-semibold text-gray-700">👩 Maklumat Ibu</h2>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <label className={labelCls}>Nama Penuh</label>
+              <input {...register("motherName")} className={inputCls} placeholder="Nama ibu" />
+            </div>
+            <div>
+              <label className={labelCls}>No. Kad Pengenalan</label>
+              <input {...register("motherIc")} className={inputCls} placeholder="000000-00-0000" maxLength={14} />
+            </div>
+            <div>
+              <label className={labelCls}>No. Telefon</label>
+              <input {...register("motherPhone")} className={inputCls} placeholder="01x-xxxxxxx" />
+            </div>
+            <div>
+              <label className={labelCls}>Pekerjaan</label>
+              <input {...register("motherJob")} className={inputCls} placeholder="cth: Guru" />
+            </div>
+          </div>
+        </div>
+
+        {/* KENALAN KECEMASAN */}
+        <div className="bg-white rounded-2xl border p-6 space-y-4">
+          <h2 className="font-semibold text-gray-700">🚨 Kenalan Kecemasan</h2>
+          <p className="text-xs text-gray-400">Selain ibu bapa — cth: datuk, nenek, adik-beradik</p>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <label className={labelCls}>Nama</label>
+              <input {...register("emergencyContact")} className={inputCls} placeholder="Nama kenalan" />
+            </div>
+            <div>
+              <label className={labelCls}>No. Telefon</label>
+              <input {...register("emergencyPhone")} className={inputCls} placeholder="01x-xxxxxxx" />
+            </div>
+          </div>
+        </div>
+
+        {/* NOTA PERUBATAN */}
+        <div className="bg-white rounded-2xl border p-6">
+          <h2 className="font-semibold text-gray-700 mb-4">📋 Nota Perubatan</h2>
+          <textarea {...register("medicalNotes")} rows={3} className={`${inputCls} resize-none`} placeholder="Alahan, penyakit kronik, nota khas..." />
+        </div>
+
+        <div className="flex gap-3 pb-4">
           <Link href="/children" className="flex-1 py-3 rounded-xl border border-gray-200 text-gray-600 font-medium text-center hover:bg-gray-50 transition">
             Batal
           </Link>

@@ -10,7 +10,6 @@ import { Child, GrowthRecord, AttendanceRecord, Achievement, HealthRecord } from
 import { calculateAge, formatDate } from "@/lib/utils";
 import Link from "next/link";
 import { ArrowLeft, Edit2, TrendingUp, CalendarCheck, Trophy, Heart, User } from "lucide-react";
-
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
 
 type Tab = "info" | "growth" | "health" | "attendance" | "achievements";
@@ -24,16 +23,39 @@ const tabs: { id: Tab; label: string; icon: React.ReactNode }[] = [
 ];
 
 const statusConfig = {
-  present: { label: "Hadir", color: "bg-green-100 text-green-700", emoji: "✅" },
-  absent: { label: "Tidak Hadir", color: "bg-red-100 text-red-700", emoji: "❌" },
-  sick: { label: "Sakit", color: "bg-yellow-100 text-yellow-700", emoji: "🤒" },
-  holiday: { label: "Cuti", color: "bg-blue-100 text-blue-700", emoji: "🏖️" },
-  "half-day": { label: "Separuh Hari", color: "bg-purple-100 text-purple-700", emoji: "⏰" },
+  present:   { label: "Hadir",         color: "bg-green-100 text-green-700",   emoji: "✅" },
+  absent:    { label: "Tidak Hadir",   color: "bg-red-100 text-red-700",       emoji: "❌" },
+  sick:      { label: "Sakit",         color: "bg-yellow-100 text-yellow-700", emoji: "🤒" },
+  holiday:   { label: "Cuti",          color: "bg-blue-100 text-blue-700",     emoji: "🏖️" },
+  "half-day":{ label: "Separuh Hari",  color: "bg-purple-100 text-purple-700", emoji: "⏰" },
 };
 
 const categoryEmojis: Record<string, string> = {
   academic: "📚", sports: "⚽", arts: "🎨", religion: "🌙", competition: "🏆", award: "🥇",
 };
+
+function InfoRow({ label, value, href }: { label: string; value?: string; href?: string }) {
+  if (!value) return null;
+  return (
+    <div>
+      <p className="text-xs text-gray-400 uppercase font-medium tracking-wide">{label}</p>
+      {href ? (
+        <a href={href} className="text-blue-600 font-medium mt-0.5 block">{value}</a>
+      ) : (
+        <p className="text-gray-700 font-medium mt-0.5">{value}</p>
+      )}
+    </div>
+  );
+}
+
+function Section({ title, children }: { title: string; children: React.ReactNode }) {
+  return (
+    <div className="bg-white rounded-2xl border p-6">
+      <h3 className="font-semibold text-gray-700 mb-4">{title}</h3>
+      <div className="grid grid-cols-2 gap-4">{children}</div>
+    </div>
+  );
+}
 
 export default function ChildDetailPage() {
   const { id } = useParams<{ id: string }>();
@@ -73,6 +95,8 @@ export default function ChildDetailPage() {
   const latestGrowth = growth[growth.length - 1];
   const aStat = getAttendanceStats(attendance);
 
+  const fullAddress = [child.address, child.postcode && child.city ? `${child.postcode} ${child.city}` : (child.postcode || child.city), child.state].filter(Boolean).join(", ");
+
   return (
     <div className="max-w-3xl mx-auto">
       {/* Header */}
@@ -94,25 +118,25 @@ export default function ChildDetailPage() {
         <div className="px-5 pb-5">
           <div className="-mt-10 mb-4">
             <div className="w-20 h-20 rounded-2xl border-4 border-white bg-blue-100 overflow-hidden flex items-center justify-center shadow-md">
-              {child.photo ? (
-                <img src={child.photo} alt={child.fullName} className="object-cover w-full h-full" />
-              ) : (
-                <span className="text-3xl">{child.gender === "male" ? "👦" : "👧"}</span>
-              )}
+              {child.photo
+                ? <img src={child.photo} alt={child.fullName} className="object-cover w-full h-full" />
+                : <span className="text-3xl">{child.gender === "male" ? "👦" : "👧"}</span>}
             </div>
           </div>
           <div className="mb-4">
             <h2 className="text-lg font-bold text-gray-800 leading-snug">{child.fullName}</h2>
             {child.nickname && <p className="text-gray-400 text-sm mt-0.5">"{child.nickname}"</p>}
+            {child.icNumber && (
+              <p className="text-gray-500 text-sm mt-1 font-mono">🪪 {child.icNumber}</p>
+            )}
           </div>
-
           {/* Quick stats */}
           <div className="grid grid-cols-4 gap-3">
             {[
-              { label: "Rekod", value: growth.length, color: "text-emerald-600" },
-              { label: "Kehadiran", value: `${aStat.percentage}%`, color: "text-orange-500" },
-              { label: "Pencapaian", value: achievements.length, color: "text-yellow-500" },
-              { label: "Kesihatan", value: healthRecords.length, color: "text-rose-500" },
+              { label: "Rekod",       value: growth.length,             color: "text-emerald-600" },
+              { label: "Kehadiran",   value: `${aStat.percentage}%`,   color: "text-orange-500" },
+              { label: "Pencapaian",  value: achievements.length,       color: "text-yellow-500" },
+              { label: "Kesihatan",   value: healthRecords.length,      color: "text-rose-500" },
             ].map((s) => (
               <div key={s.label} className="text-center p-3 bg-gray-50 rounded-xl">
                 <p className={`text-lg font-bold ${s.color}`}>{s.value}</p>
@@ -127,52 +151,91 @@ export default function ChildDetailPage() {
       <div className="flex gap-1 mb-4 bg-white rounded-2xl border p-1.5 overflow-x-auto">
         {tabs.map((tab) => (
           <button key={tab.id} onClick={() => setActiveTab(tab.id)}
-            className={`flex items-center gap-1.5 px-4 py-2.5 rounded-xl text-sm font-medium transition whitespace-nowrap flex-shrink-0 ${activeTab === tab.id ? "gradient-primary text-white shadow-md" : "text-gray-500 hover:bg-gray-50"}`}>
+            className={`flex items-center gap-1.5 px-4 py-2.5 rounded-xl text-sm font-medium transition whitespace-nowrap flex-shrink-0 ${
+              activeTab === tab.id ? "gradient-primary text-white shadow-md" : "text-gray-500 hover:bg-gray-50"
+            }`}>
             {tab.icon} {tab.label}
           </button>
         ))}
       </div>
 
-      {/* Tab Content */}
+      {/* ── TAB: PROFIL ── */}
       {activeTab === "info" && (
         <div className="space-y-4">
-          <div className="bg-white rounded-2xl border p-6">
-            <h3 className="font-semibold text-gray-700 mb-4">Maklumat Asas</h3>
-            <div className="grid grid-cols-2 gap-4">
-              {[
-                { label: "Tarikh Lahir", value: formatDate(child.birthDate) },
-                { label: "Umur", value: calculateAge(child.birthDate) },
-                { label: "Jantina", value: child.gender === "male" ? "Lelaki" : "Perempuan" },
-                { label: "Kumpulan Darah", value: child.bloodType || "—" },
-              ].map((item) => (
-                <div key={item.label}>
-                  <p className="text-xs text-gray-400 uppercase font-medium">{item.label}</p>
-                  <p className="text-gray-700 font-medium mt-0.5">{item.value}</p>
-                </div>
-              ))}
-            </div>
-          </div>
 
-          {(child.emergencyContact || child.emergencyPhone) && (
+          {/* Maklumat Asas */}
+          <Section title="👤 Maklumat Asas">
+            <InfoRow label="Tarikh Lahir" value={formatDate(child.birthDate)} />
+            <InfoRow label="Umur" value={calculateAge(child.birthDate)} />
+            <InfoRow label="Jantina" value={child.gender === "male" ? "Lelaki" : "Perempuan"} />
+            <InfoRow label="Kumpulan Darah" value={child.bloodType} />
+          </Section>
+
+          {/* Maklumat Rasmi */}
+          {(child.icNumber || child.birthCertNo || child.passportNo || child.birthPlace || child.nationality || child.race || child.religion) && (
+            <Section title="🪪 Maklumat Rasmi">
+              <InfoRow label="No. MyKid / IC" value={child.icNumber} />
+              <InfoRow label="No. Sijil Kelahiran" value={child.birthCertNo} />
+              <InfoRow label="No. Passport" value={child.passportNo} />
+              <InfoRow label="Tempat Lahir" value={child.birthPlace} />
+              <InfoRow label="Kerakyatan" value={child.nationality} />
+              <InfoRow label="Bangsa" value={child.race} />
+              <InfoRow label="Agama" value={child.religion} />
+            </Section>
+          )}
+
+          {/* Alamat */}
+          {fullAddress && (
             <div className="bg-white rounded-2xl border p-6">
-              <h3 className="font-semibold text-gray-700 mb-4">🚨 Kenalan Kecemasan</h3>
-              <div className="grid grid-cols-2 gap-4">
-                {child.emergencyContact && (
-                  <div>
-                    <p className="text-xs text-gray-400 uppercase font-medium">Nama</p>
-                    <p className="text-gray-700 font-medium mt-0.5">{child.emergencyContact}</p>
-                  </div>
-                )}
-                {child.emergencyPhone && (
-                  <div>
-                    <p className="text-xs text-gray-400 uppercase font-medium">Telefon</p>
-                    <a href={`tel:${child.emergencyPhone}`} className="text-blue-600 font-medium mt-0.5 block">{child.emergencyPhone}</a>
-                  </div>
-                )}
-              </div>
+              <h3 className="font-semibold text-gray-700 mb-4">🏠 Alamat</h3>
+              <p className="text-gray-700 font-medium leading-relaxed">{fullAddress}</p>
             </div>
           )}
 
+          {/* Sekolah */}
+          {(child.schoolName || child.schoolYear || child.schoolClass) && (
+            <Section title="🏫 Sekolah / Tadika">
+              <div className="col-span-2">
+                <InfoRow label="Nama Sekolah" value={child.schoolName} />
+              </div>
+              <InfoRow label="Darjah / Tahun" value={child.schoolYear} />
+              <InfoRow label="Kelas" value={child.schoolClass} />
+            </Section>
+          )}
+
+          {/* Maklumat Bapa */}
+          {(child.fatherName || child.fatherIc || child.fatherPhone || child.fatherJob) && (
+            <Section title="👨 Maklumat Bapa">
+              <div className="col-span-2">
+                <InfoRow label="Nama" value={child.fatherName} />
+              </div>
+              <InfoRow label="No. Kad Pengenalan" value={child.fatherIc} />
+              <InfoRow label="Pekerjaan" value={child.fatherJob} />
+              <InfoRow label="No. Telefon" value={child.fatherPhone} href={child.fatherPhone ? `tel:${child.fatherPhone}` : undefined} />
+            </Section>
+          )}
+
+          {/* Maklumat Ibu */}
+          {(child.motherName || child.motherIc || child.motherPhone || child.motherJob) && (
+            <Section title="👩 Maklumat Ibu">
+              <div className="col-span-2">
+                <InfoRow label="Nama" value={child.motherName} />
+              </div>
+              <InfoRow label="No. Kad Pengenalan" value={child.motherIc} />
+              <InfoRow label="Pekerjaan" value={child.motherJob} />
+              <InfoRow label="No. Telefon" value={child.motherPhone} href={child.motherPhone ? `tel:${child.motherPhone}` : undefined} />
+            </Section>
+          )}
+
+          {/* Kenalan Kecemasan */}
+          {(child.emergencyContact || child.emergencyPhone) && (
+            <Section title="🚨 Kenalan Kecemasan">
+              <InfoRow label="Nama" value={child.emergencyContact} />
+              <InfoRow label="Telefon" value={child.emergencyPhone} href={child.emergencyPhone ? `tel:${child.emergencyPhone}` : undefined} />
+            </Section>
+          )}
+
+          {/* Nota Perubatan */}
           {child.medicalNotes && (
             <div className="bg-white rounded-2xl border p-6">
               <h3 className="font-semibold text-gray-700 mb-2">📋 Nota Perubatan</h3>
@@ -182,6 +245,7 @@ export default function ChildDetailPage() {
         </div>
       )}
 
+      {/* ── TAB: PERKEMBANGAN ── */}
       {activeTab === "growth" && (
         <div className="space-y-4">
           {!dataLoaded ? (
@@ -199,16 +263,20 @@ export default function ChildDetailPage() {
               {latestGrowth && (
                 <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
                   {[
-                    { label: "Berat", value: `${latestGrowth.weight} kg`, icon: "⚖️" },
+                    { label: "Berat",  value: `${latestGrowth.weight} kg`, icon: "⚖️" },
                     { label: "Tinggi", value: `${latestGrowth.height} cm`, icon: "📏" },
-                    { label: "BMI", value: latestGrowth.bmi.toString(), icon: "📊" },
+                    { label: "BMI",    value: latestGrowth.bmi.toString(), icon: "📊" },
                     { label: "Kepala", value: latestGrowth.headSize ? `${latestGrowth.headSize} cm` : "—", icon: "🧠" },
                   ].map((s) => (
                     <div key={s.label} className="bg-white rounded-2xl border p-4 text-center">
                       <div className="text-2xl mb-1">{s.icon}</div>
                       <p className="text-xl font-bold text-gray-800">{s.value}</p>
                       <p className="text-sm text-gray-500">{s.label}</p>
-                      {s.label === "BMI" && <p className={`text-xs font-medium mt-0.5 ${getBMICategory(latestGrowth.bmi).color}`}>{getBMICategory(latestGrowth.bmi).label}</p>}
+                      {s.label === "BMI" && (
+                        <p className={`text-xs font-medium mt-0.5 ${getBMICategory(latestGrowth.bmi).color}`}>
+                          {getBMICategory(latestGrowth.bmi).label}
+                        </p>
+                      )}
                     </div>
                   ))}
                 </div>
@@ -235,7 +303,7 @@ export default function ChildDetailPage() {
                 <div className="overflow-x-auto">
                   <table className="w-full">
                     <thead className="bg-gray-50">
-                      <tr>{["Tarikh", "Berat", "Tinggi", "BMI"].map((h) => (
+                      <tr>{["Tarikh","Berat","Tinggi","BMI"].map((h) => (
                         <th key={h} className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">{h}</th>
                       ))}</tr>
                     </thead>
@@ -245,7 +313,9 @@ export default function ChildDetailPage() {
                           <td className="px-4 py-3 text-sm text-gray-600">{formatDate(r.recordDate)}</td>
                           <td className="px-4 py-3 text-sm font-medium">{r.weight} kg</td>
                           <td className="px-4 py-3 text-sm font-medium">{r.height} cm</td>
-                          <td className="px-4 py-3 text-sm"><span className={`font-medium ${getBMICategory(r.bmi).color}`}>{r.bmi}</span></td>
+                          <td className="px-4 py-3 text-sm">
+                            <span className={`font-medium ${getBMICategory(r.bmi).color}`}>{r.bmi}</span>
+                          </td>
                         </tr>
                       ))}
                     </tbody>
@@ -257,6 +327,7 @@ export default function ChildDetailPage() {
         </div>
       )}
 
+      {/* ── TAB: KESIHATAN ── */}
       {activeTab === "health" && (
         <div className="space-y-3">
           {!dataLoaded ? (
@@ -296,6 +367,7 @@ export default function ChildDetailPage() {
         </div>
       )}
 
+      {/* ── TAB: KEHADIRAN ── */}
       {activeTab === "attendance" && (
         <div className="space-y-4">
           {!dataLoaded ? (
@@ -304,10 +376,10 @@ export default function ChildDetailPage() {
             <>
               <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
                 {[
-                  { label: "Jumlah", value: aStat.total, emoji: "📋" },
-                  { label: "Hadir", value: aStat.present, emoji: "✅" },
-                  { label: "Tidak Hadir", value: aStat.absent, emoji: "❌" },
-                  { label: "% Kehadiran", value: `${aStat.percentage}%`, emoji: "📊" },
+                  { label: "Jumlah",       value: aStat.total,               emoji: "📋" },
+                  { label: "Hadir",        value: aStat.present,             emoji: "✅" },
+                  { label: "Tidak Hadir",  value: aStat.absent,              emoji: "❌" },
+                  { label: "% Kehadiran",  value: `${aStat.percentage}%`,   emoji: "📊" },
                 ].map((s) => (
                   <div key={s.label} className="bg-white rounded-2xl border p-4 text-center">
                     <div className="text-xl mb-1">{s.emoji}</div>
@@ -328,7 +400,7 @@ export default function ChildDetailPage() {
                   <div className="overflow-x-auto">
                     <table className="w-full">
                       <thead className="bg-gray-50">
-                        <tr>{["Tarikh", "Status", "Nota"].map((h) => (
+                        <tr>{["Tarikh","Status","Nota"].map((h) => (
                           <th key={h} className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">{h}</th>
                         ))}</tr>
                       </thead>
@@ -355,6 +427,7 @@ export default function ChildDetailPage() {
         </div>
       )}
 
+      {/* ── TAB: PENCAPAIAN ── */}
       {activeTab === "achievements" && (
         <div>
           {!dataLoaded ? (

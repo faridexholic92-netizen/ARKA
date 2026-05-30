@@ -11,15 +11,54 @@ export interface User {
 export interface Child {
   id: string;
   parentId: string;
+
+  // Maklumat Asas
   fullName: string;
   nickname?: string;
   birthDate: string;
   gender: "male" | "female";
   bloodType?: string;
   photo?: string;
-  medicalNotes?: string;
+
+  // Maklumat Rasmi
+  icNumber?: string;        // No. MyKid / No. Kad Pengenalan
+  birthCertNo?: string;     // No. Sijil Kelahiran
+  passportNo?: string;      // No. Passport
+  birthPlace?: string;      // Tempat Lahir
+  nationality?: string;     // Kerakyatan
+  race?: string;            // Bangsa
+  religion?: string;        // Agama
+
+  // Alamat
+  address?: string;         // Alamat penuh
+  postcode?: string;        // Poskod
+  city?: string;            // Bandar
+  state?: string;           // Negeri
+
+  // Maklumat Sekolah / Tadika
+  schoolName?: string;      // Nama Sekolah / Tadika
+  schoolYear?: string;      // Darjah / Tahun / Level
+  schoolClass?: string;     // Nama Kelas
+
+  // Maklumat Bapa
+  fatherName?: string;
+  fatherIc?: string;
+  fatherPhone?: string;
+  fatherJob?: string;
+
+  // Maklumat Ibu
+  motherName?: string;
+  motherIc?: string;
+  motherPhone?: string;
+  motherJob?: string;
+
+  // Kenalan Kecemasan
   emergencyContact?: string;
   emergencyPhone?: string;
+
+  // Nota
+  medicalNotes?: string;
+
   createdAt: string;
 }
 
